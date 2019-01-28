@@ -1,7 +1,8 @@
-function accuracy = Compute_AccuracyNonConsec(MNmax,gamma,plt)
+function accuracy = ComputeAccuracyNonConsec(MNmax,gamma,plt)
 
 % intialise
 if nargin < 2, gamma = 1; plt = false; end
+if nargin < 3, plt = false; end
 accuracy = zeros(MNmax,MNmax);
 
 % compute

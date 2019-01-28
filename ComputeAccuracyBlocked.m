@@ -1,7 +1,8 @@
-function accuracy = Compute_AccuracyBlocked(MNmax,gamma,plt)
+function accuracy = ComputeAccuracyBlocked(MNmax,gamma,plt)
 
 % intialise
 if nargin < 2, gamma = 1; plt = false; end
+if nargin < 3, plt = false; end
 accuracy = zeros(MNmax,MNmax);
 
 % compute roots

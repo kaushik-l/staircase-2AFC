@@ -8,24 +8,24 @@ trls_nc = NonConsecStairSim(s0,ds,ntrls,M,N,error);
 gamma = N;
 trls_weighted = WeightedStairSim(s0,ds,ntrls,gamma,error);
 
-% figure, hold on
-% plot(1:Nmax,trls_cont)
-% plot(1:Nmax,trls_block)
-% plot(1:Nmax,trls_nc)
-% set(gca,'fontsize',14)
-% title('Number of Trials To Reach Threshold','fontsize',20)
-% xlabel('N','fontsize',14)
-% ylabel('Number of Trials','fontsize',14)
-% ylim([0 250])
-% legend('Continuous','Blocked','Non-Consecutive','location','northwest')
-% 
-% figure, hold on
-% plot(gamma,trls_weighted)
-% set(gca,'fontsize',14)
-% title('Number of Trials To Reach Threshold','fontsize',20)
-% xlabel('N','fontsize',14)
-% ylabel('Number of Trials','fontsize',14)
-% ylim([0 250])
+figure, hold on
+plot(1:Nmax,trls_cont)
+plot(1:Nmax,trls_block)
+plot(1:Nmax,trls_nc)
+set(gca,'fontsize',14)
+title('Number of Trials To Reach Threshold','fontsize',20)
+xlabel('N','fontsize',14)
+ylabel('Number of Trials','fontsize',14)
+ylim([0 250])
+legend('Continuous','Blocked','Non-Consecutive','location','northwest')
+
+figure, hold on
+plot(gamma,trls_weighted)
+set(gca,'fontsize',14)
+title('Number of Trials To Reach Threshold','fontsize',20)
+xlabel('N','fontsize',14)
+ylabel('Number of Trials','fontsize',14)
+ylim([0 250])
 
 end
 
