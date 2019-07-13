@@ -4,7 +4,7 @@ accuracy_cont = 100*ComputeAccuracyContinuous(MNmax);
 accuracy_noncons = 100*ComputeAccuracyNonConsec(MNmax);
 accuracy_wtd = 100*ComputeAccuracyWeighted(gammamax);
 
-figure; hold on; set(gcf,'Position',[1107 1037 600 600]);
+figure; hold on; set(gcf,'Position',[-1807 300 600 600]);
 
 %% Weighted up-down method
 p1 = plot(1:gammamax,accuracy_wtd,'Color','k'); axis([1 10 50 100]); set(gca,'XTick',2:2:10); set(gca,'YTick',50:10:100);

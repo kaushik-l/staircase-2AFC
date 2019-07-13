@@ -1,7 +1,7 @@
 %% Psychometric function
 x = linspace(-5,5,1000);
 f = normpdf(x,0,2); F = normcdf(x,0,2);
-figure; hold on; set(gcf,'Position',[1107 1037 1690 934]);
+figure; hold on; set(gcf,'Position',[-1807 300 1690 934]);
 
 %% Draw psychometric function
 subplot(2,4,1); plot(x,F,'k','LineWidth',2); vline(0,'-k'); box off; %axis off;

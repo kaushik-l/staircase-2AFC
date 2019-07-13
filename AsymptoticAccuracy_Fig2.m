@@ -4,7 +4,7 @@ accuracy_cont = 100*ComputeAccuracyContinuous(MNmax);
 accuracy_blkd = 100*ComputeAccuracyBlocked(MNmax);
 accuracy_noncons = 100*ComputeAccuracyNonConsec(MNmax);
 
-figure; hold on; set(gcf,'Position',[1107 1037 1400 934]);
+figure; hold on; set(gcf,'Position',[-1807 300 1400 934]);
 
 %% 1-up N-down
 subplot(2,3,1); hold on;

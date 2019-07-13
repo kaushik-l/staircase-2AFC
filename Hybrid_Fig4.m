@@ -6,7 +6,7 @@ for i=1:length(gamma)
     accuracy_noncons(:,:,i) = 100*ComputeAccuracyNonConsec(MNmax,gamma(i));
 end
 
-figure; hold on; set(gcf,'Position',[1107 1037 900 900]);
+figure; hold on; set(gcf,'Position',[-1807 300 900 900]);
 
 subplot(2,2,1); hold on;
 %% Weighted Continuous

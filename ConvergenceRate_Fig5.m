@@ -1,4 +1,4 @@
-figure; hold on; set(gcf,'Position',[1107 1037 1200 800]);
+figure; hold on; set(gcf,'Position',[-1807 300 1200 800]);
 
 %% 1-up 2-down staircase (effect of update method)
 s0 = 3; ds = 0.1; ntrls = 200; M = 1; N = 2; error = 0.01;
@@ -81,5 +81,5 @@ subplot(2,3,5); hold on;
 plot(0:0.1:s0max,trls_cont,'Color',[0 0.25 1],'MarkerFaceColor',[0 0.25 1],'linewidth',2);
 plot(0:0.1:s0max,trls_blkd,'Color','r','MarkerFaceColor','r','linewidth',2);
 plot(0:0.1:s0max,trls_noncons,'Color',[1 0.5 0],'MarkerFaceColor',[1 0.5 0],'linewidth',2);
-axis([0 0.5 0 0.1]); set(gca,'YTick',0:0.02:0.1,'XTick',0:0.1:0.5);
+axis([0 s0max 0 125]); set(gca,'YTick',0:25:125,'XTick',0:0.5:s0max);
 % xlabel('Step size, {\it \Delta} (in units of \sigma)'); ylabel({'Convergence rate'; '(No. of trials)^{-1}'});
