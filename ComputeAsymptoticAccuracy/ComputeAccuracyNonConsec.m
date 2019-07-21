@@ -7,7 +7,6 @@ accuracy = zeros(MNmax,MNmax);
 % compute
 for m = 1:MNmax
     for n = 1:MNmax
-        if m < n, accuracy(m,n) = (n*gamma)/(m + (n*gamma));
-        else, accuracy(m,n) = 0.5; end
+        accuracy(m,n) = (n*gamma)/(m + (n*gamma));
     end
 end
