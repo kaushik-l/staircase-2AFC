@@ -20,5 +20,3 @@ for m = 1:MNmax
         end
     end
 end
-
-zz=1;
