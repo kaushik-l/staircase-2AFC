@@ -10,12 +10,13 @@ classdef nonconsecutive < handle
     methods
         
         %% class constructor
-        function this = nonconsecutive(MN_max,gamma,s_max,ds)
+        function this = nonconsecutive(MN_max,gamma,s_max,ds,responsemodel)
             this.DesignParameter.M_max = MN_max;
             this.DesignParameter.N_max = MN_max;
             this.DesignParameter.gamma = gamma;
             this.DesignParameter.stim_max = s_max;
             this.DesignParameter.stepsize = ds;
+            this.DesignParameter.responsemodel = responsemodel;
         end
         
         %% compute balance point
@@ -37,13 +38,28 @@ classdef nonconsecutive < handle
             
             M_max = this.DesignParameter.M_max; N_max = this.DesignParameter.N_max;
             smax = this.DesignParameter.stim_max; ds = this.DesignParameter.stepsize;
-            s = smax:-ds:-smax; % stimulus levels
-            Ns = numel(s); % number of stimulus levels
-            p = normcdf(s); % percentiles corresponding to stimulus levels
+            switch lower(this.DesignParameter.responsemodel)
+                case 'gaussian'
+                    s = smax:-ds:-smax; % stimulus levels
+                    Ns = numel(s); % number of stimulus levels
+                    p = normcdf(s); % percentiles corresponding to stimulus levels
+                case 'logistic'
+                    s = smax:-ds:-smax; % stimulus levels
+                    Ns = numel(s); % number of stimulus levels
+                    p = (1./(1 + exp(-s*pi/sqrt(3)))); % percentiles corresponding to stimulus levels
+                case 'weibull'
+                    s = ds + (smax:-ds:0); % stimulus levels
+                    Ns = numel(s); % number of stimulus levels
+                    p = (1 - exp(-s)); % percentiles corresponding to stimulus levels
+                case 'linear'
+                    s = smax:-ds:-smax; % stimulus levels
+                    Ns = numel(s); % number of stimulus levels
+                    p = flip(cumsum(ones(1,Ns)/(Ns+1)));
+            end
             this.StationaryDistribution.x_stim = zeros(M_max,N_max,Ns);
             this.StationaryDistribution.x_prob = zeros(M_max,N_max,Ns);
             this.StationaryDistribution.y = zeros(M_max,N_max,Ns);
-            this.StationaryDistribution.Entropy = zeros(M_max,N_max);            
+            this.StationaryDistribution.Entropy = zeros(M_max,N_max);
             % compute roots
             for m = 1:M_max
                 lambda = nan(1,Ns);
@@ -67,8 +83,24 @@ classdef nonconsecutive < handle
             
             M_max = this.DesignParameter.M_max; N_max = this.DesignParameter.N_max;
             smax = this.DesignParameter.stim_max; ds = this.DesignParameter.stepsize;
-            s = smax:-ds:-smax; Ns = numel(s);
-            p = normcdf(s);
+            switch lower(this.DesignParameter.responsemodel)
+                case 'gaussian'
+                    s = smax:-ds:-smax; % stimulus levels
+                    Ns = numel(s); % number of stimulus levels
+                    p = normcdf(s); % percentiles corresponding to stimulus levels
+                case 'logistic'
+                    s = smax:-ds:-smax; % stimulus levels
+                    Ns = numel(s); % number of stimulus levels
+                    p = (1./(1 + exp(-s*pi/sqrt(3)))); % percentiles corresponding to stimulus levels
+                case 'weibull'
+                    s = ds + (smax:-ds:0); % stimulus levels
+                    Ns = numel(s); % number of stimulus levels
+                    p = (1 - exp(-s)); % percentiles corresponding to stimulus levels
+                case 'linear'
+                    s = smax:-ds:-smax; % stimulus levels
+                    Ns = numel(s); % number of stimulus levels
+                    p = flip(cumsum(ones(1,Ns)/(Ns+1)));
+            end
             this.ConvergenceRate.x_stim = zeros(M_max,N_max,Ns);
             this.ConvergenceRate.x_prob = zeros(M_max,N_max,Ns);
             % compute roots
