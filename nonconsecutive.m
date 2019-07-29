@@ -5,6 +5,7 @@ classdef nonconsecutive < handle
         BalancePoint
         StationaryDistribution
         ConvergenceRate
+        Simulation
     end
     %%
     methods
@@ -121,5 +122,69 @@ classdef nonconsecutive < handle
             end
             
         end
+        
+        %% simulate staircase
+        function this = SimulateProcess(this,M,N,numtrials)
+            smax = this.DesignParameter.stim_max; ds = this.DesignParameter.stepsize;
+            this.Simulation.M = M; this.Simulation.N = N; this.Simulation.numtrials = numtrials;            
+            switch lower(this.DesignParameter.responsemodel)
+                case 'gaussian'
+                    s = smax:-ds:-smax; % stimulus levels
+                    Ns = numel(s); % number of stimulus levels
+                    p = normcdf(s); % percentiles corresponding to stimulus levels
+                case 'logistic'
+                    s = smax:-ds:-smax; % stimulus levels
+                    Ns = numel(s); % number of stimulus levels
+                    p = (1./(1 + exp(-s*pi/sqrt(3)))); % percentiles corresponding to stimulus levels
+                case 'weibull'
+                    s = ds + (smax:-ds:0); % stimulus levels
+                    Ns = numel(s); % number of stimulus levels
+                    p = (1 - exp(-s)); % percentiles corresponding to stimulus levels
+                case 'linear'
+                    s = smax:-ds:-smax; % stimulus levels
+                    Ns = numel(s); % number of stimulus levels
+                    p = flip(cumsum(ones(1,Ns)/(Ns+1)));
+            end
+            stim_theory = nan(numtrials,1); stim_theory(1) = smax;
+            stim = nan(numtrials,1); stim(1) = smax; resp = nan(numtrials,1);
+            count_correct = 0; count_incorrect = 0;
+            for i=1:numtrials
+                resp(i) = binornd(1,p((s>stim(i)-1e-3) + (s<stim(i)+1e-3) == 2));
+                count_incorrect = count_incorrect + (resp(i)==0); count_correct = count_correct + (resp(i)==1);
+                if count_incorrect==M, count_incorrect = 0; stim(i+1) = min(smax, stim(i) + ds); % (reset counter + increase/decrease stim) or (leave unchaged)
+                elseif count_correct==N, count_correct = 0; stim(i+1) = max(-smax, stim(i) - ds);  else, stim(i+1) = stim(i); end
+                % theoretical stimulus
+                switch lower(this.DesignParameter.responsemodel)
+                    case 'gaussian'
+                        prob_theory = normcdf(stim_theory(i));
+                    case 'logistic'
+                        prob_theory = (1./(1 + exp(-stim_theory(i)*pi/sqrt(3)))); % percentiles corresponding to stimulus levels
+                    case 'weibull'
+                        prob_theory = (1 - exp(-stim_theory(i))); % percentiles corresponding to stimulus levels
+                    case 'linear'
+                        prob_theory = (stim_theory+smax)/(2*smax);
+                end
+                Pu = (1 - prob_theory)/M;
+                Pd = (prob_theory)/N;
+                stim_theory(i+1) = stim_theory(i) + ds*Pu - ds*Pd;
+            end
+            stim(end) = []; stim_theory(end) = [];
+            % save results
+            this.Simulation.stim = stim;
+            this.Simulation.resp = resp;
+            this.Simulation.stim_theory = stim_theory;
+            stim_mean = mean(stim(end-(numtrials/2):end));
+            switch lower(this.DesignParameter.responsemodel)
+                case 'gaussian'
+                    this.Simulation.BalancePoint = normcdf(stim_mean);
+                case 'logistic'
+                    this.Simulation.BalancePoint = (1./(1 + exp(-stim_mean*pi/sqrt(3))));
+                case 'weibull'
+                    this.Simulation.BalancePoint = (1 - exp(-stim_mean)); % percentiles corresponding to stimulus levels
+                case 'linear'
+                    this.Simulation.BalancePoint = (stim_mean+smax)/(2*smax);
+            end
+        end
+        
     end
 end
